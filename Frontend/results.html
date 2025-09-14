@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results - Medical Report Analyzer</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+        <span class="theme-icon">🌙</span>
+    </div>
+
+    <div class="results-layout">
+        <header class="results-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <button onclick="window.location.href='/'" class="back-btn">
+                        <span class="back-icon">←</span>
+                        <span>Upload New Report</span>
+                    </button>
+                </div>
+                <div class="header-center">
+                    <div class="logo-icon">📊</div>
+                    <h1>Analysis Results</h1>
+                </div>
+                <div class="header-right">
+                    <div class="actions-bar">
+                        <button id="btnPrint" class="action-btn primary">
+                            <span class="btn-icon">🖨️</span>
+                            <span>Print / PDF</span>
+                        </button>
+                        <button id="btnCopyJson" class="action-btn secondary">
+                            <span class="btn-icon">📋</span>
+                            <span>Copy JSON</span>
+                        </button>
+                        <button id="btnShare" class="action-btn secondary">
+                            <span class="btn-icon">📤</span>
+                            <span>Share</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="results-container fade-in">
+            <div class="results-sidebar">
+                <div class="sidebar-content">
+                    <h3>Quick Navigation</h3>
+                    <nav class="results-nav">
+                        <a href="#patient-info" class="nav-item active">
+                            <span class="nav-icon">👤</span>
+                            Patient Info
+                        </a>
+                        <a href="#summary" class="nav-item">
+                            <span class="nav-icon">📋</span>
+                            Summary
+                        </a>
+                        <a href="#vitals" class="nav-item">
+                            <span class="nav-icon">💓</span>
+                            Vitals
+                        </a>
+                        <a href="#labs" class="nav-item">
+                            <span class="nav-icon">🧪</span>
+                            Lab Results
+                        </a>
+                        <a href="#diagnoses" class="nav-item">
+                            <span class="nav-icon">🏥</span>
+                            Diagnoses
+                        </a>
+                        <a href="#recommendations" class="nav-item">
+                            <span class="nav-icon">💡</span>
+                            Recommendations
+                        </a>
+                        <a href="#qa" class="nav-item">
+                            <span class="nav-icon">❓</span>
+                            Q&A
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+            <main class="results-main">
+                <div id="results-content">
+                    <!-- Results will be populated by JavaScript -->
+                </div>
+                <div class="result-card" id="qa">
+                    <h3>❓ Patient Q&A</h3>
+                    <form id="qaForm" class="two-col" style="grid-template-columns: 2fr 1fr; align-items: start;">
+                        <div>
+                            <label for="qaQuestion" class="input-label" style="margin-bottom:6px;">Question</label>
+                            <textarea id="qaQuestion" class="patient-input" rows="3" placeholder="e.g., Summarize BP trend across last 3 visits"></textarea>
+                        </div>
+                        <div>
+                            <label for="qaPatientId" class="input-label" style="margin-bottom:6px;">Patient ID</label>
+                            <input id="qaPatientId" class="patient-input" type="text" placeholder="e.g., P7">
+                            <label for="qaTopK" class="input-label" style="margin:12px 0 6px;">Top K</label>
+                            <input id="qaTopK" class="patient-input" type="number" value="5" min="1" max="10">
+                            <button id="qaSubmit" type="submit" class="analyze-btn" style="margin-top:12px;">
+                                <span class="btn-content"><span class="btn-icon">➡️</span><span>Ask</span></span>
+                                <span class="btn-loader" style="display:none;"><span class="spinner"></span> Asking...</span>
+                            </button>
+                        </div>
+                    </form>
+                    <div id="qaResult" class="analysis-text" style="margin-top:16px;"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-content">
+            <div class="spinner-large"></div>
+            <h3>Loading Results...</h3>
+            <p>Please wait while we prepare your analysis</p>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+    <script>
+        // Display results from URL parameters or localStorage
+        window.addEventListener('DOMContentLoaded', () => {
+            displayResults();
+            initializeNavigation();
+            initializeTheme();
+        });
+    </script>
+</body>
+</html>

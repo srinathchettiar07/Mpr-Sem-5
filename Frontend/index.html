@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Report Analyzer</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+        <span class="theme-icon">🌙</span>
+    </div>
+    
+    <div class="container fade-in">
+        <header>
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo-icon">🏥</div>
+                    <div class="logo-text">
+                        <h1>Medical Report Analyzer</h1>
+                        <p>AI-powered analysis and insights for healthcare professionals</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="upload-section">
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="input-group">
+                    <label for="patientId" class="input-label">
+                        <span class="label-icon">👤</span>
+                        Patient ID (optional)
+                    </label>
+                    <input id="patientId" name="patient_id" type="text" placeholder="e.g., P12345" class="patient-input">
+                </div>
+                
+                <div class="file-input-container">
+                    <input type="file" id="fileInput" name="file" accept=".pdf,.jpg,.jpeg,.png" required>
+                    <label for="fileInput" class="file-input-label">
+                        <div class="upload-content">
+                            <div class="upload-icon-container">
+                                <div class="upload-icon">📄</div>
+                                <div class="upload-plus">+</div>
+                            </div>
+                            <div class="upload-text">
+                                <strong>Click to upload</strong> or drag and drop
+                                <span>PDF, JPG, PNG files only • Max 10MB</span>
+                            </div>
+                        </div>
+                        <div class="file-preview" id="filePreview" style="display: none;">
+                            <div class="file-info">
+                                <div class="file-icon">📎</div>
+                                <div class="file-details">
+                                    <div class="file-name"></div>
+                                    <div class="file-size"></div>
+                                </div>
+                                <button type="button" class="remove-file" id="removeFile">×</button>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+                
+                <button type="submit" class="analyze-btn" disabled>
+                    <span class="btn-content">
+                        <span class="btn-icon">🔬</span>
+                        <span class="btn-text">Analyze Report</span>
+                    </span>
+                    <span class="btn-loader" style="display: none;">
+                        <span class="spinner"></span>
+                        Processing...
+                    </span>
+                </button>
+            </form>
+        </div>
+
+        <div id="progress" class="progress-section" style="display: none;">
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <div class="progress-steps">
+                    <div class="step active">
+                        <div class="step-icon">📄</div>
+                        <div class="step-text">Extracting text</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">🧠</div>
+                        <div class="step-text">AI Analysis</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">📊</div>
+                        <div class="step-text">Generating insights</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="upload-section" style="margin-top: 20px;">
+            <div class="result-card" id="qa-home" style="border: 1px solid var(--border-color);">
+                <h3>❓ Patient Q&A (Retrieve without upload)</h3>
+                <form id="qaHomeForm" class="two-col" style="grid-template-columns: 2fr 1fr; align-items: start;">
+                    <div>
+                        <label for="qaHomeQuestion" class="input-label" style="margin-bottom:6px;">Question</label>
+                        <textarea id="qaHomeQuestion" class="patient-input" rows="3" placeholder="e.g., Show recent abnormal labs for this patient"></textarea>
+                    </div>
+                    <div>
+                        <label for="qaHomePatientId" class="input-label" style="margin-bottom:6px;">Patient ID</label>
+                        <input id="qaHomePatientId" class="patient-input" type="text" placeholder="e.g., P7">
+                        <label for="qaHomeTopK" class="input-label" style="margin:12px 0 6px;">Top K</label>
+                        <input id="qaHomeTopK" class="patient-input" type="number" value="5" min="1" max="10">
+                        <button id="qaHomeSubmit" type="submit" class="analyze-btn" style="margin-top:12px;">
+                            <span class="btn-content"><span class="btn-icon">➡️</span><span>Ask</span></span>
+                            <span class="btn-loader" style="display:none;"><span class="spinner"></span> Asking...</span>
+                        </button>
+                    </div>
+                </form>
+                <div id="qaHomeResult" class="analysis-text" style="margin-top:16px;"></div>
+            </div>
+        </div>
+
+        <div id="error" class="error-section" style="display: none;">
+            <div class="error-message">
+                <div class="error-icon">⚠️</div>
+                <div class="error-content">
+                    <div class="error-title">Upload Error</div>
+                    <div class="error-text"></div>
+                </div>
+                <button class="error-dismiss" onclick="hideError()">×</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="features-section">
+        <div class="features-container">
+            <h2>How it works</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📤</div>
+                    <h3>Upload Report</h3>
+                    <p>Upload PDF or image files of medical reports</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>OCR Processing</h3>
+                    <p>Extract text from images and PDFs automatically</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI Analysis</h3>
+                    <p>Get insights powered by advanced AI models</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📋</div>
+                    <h3>Structured Results</h3>
+                    <p>View organized findings, vitals, and recommendations</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
